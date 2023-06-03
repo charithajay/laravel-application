@@ -47,4 +47,4 @@ jobs:
             Commit: ${{ github.sha }}
             Branch: ${{ github.ref }}
         env:
-          SLACK_WEBHOOK: ${{ secrets.https://hooks.slack.com/services/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 }}
+          SLACK_WEBHOOK: "https://hooks.slack.com/services/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"
