@@ -45,8 +45,8 @@ jobs:
           aws configure set aws_secret_access_key pGhQONpT5Ut2NmR84fKsQBufptAHzTqrojmg+9vu
           aws configure set default.region ap-south-1
 
-          scp -r -i ../Downloads/Fial.pem ./ ubuntu@3.108.54.189:~/app
-          ssh -i ../Downloads/Fial.pem ubuntu@3.108.54.189 'cd ~/app && composer install --no-dev --optimize-autoloader && php artisan migrate --seed'
+          scp -r -i ../Fial.pem ./ ubuntu@3.108.54.189:~/app
+          ssh -i ../Fial.pem ubuntu@3.108.54.189 'cd ~/app && composer install --no-dev --optimize-autoloader && php artisan migrate --seed'
 
       - name: Slack Send Message
         uses: linkinn/slack-msg-action@v1.2.0
