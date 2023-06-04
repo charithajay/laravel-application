@@ -50,8 +50,8 @@ jobs:
           aws configure set aws_secret_access_key +ij4kMmR6fxMPn5IvF1Nw5un/qgJaBQ423sI2hEv
           aws configure set default.region ap-south-1
 
-          ssh -o StrictHostKeyChecking=no -o UserKnownHostsFile=~/.ssh/known_hosts -i ../../../Fial.pem ubuntu@13.232.215.86 'cd ~/app && composer install --no-dev --optimize-autoloader && php artisan migrate --seed'
+          ssh -o StrictHostKeyChecking=no -o UserKnownHostsFile=~/.ssh/known_hosts -i ../keys/Fial.pem ubuntu@13.232.215.86 'cd ~/app && composer install --no-dev --optimize-autoloader && php artisan migrate --seed'
 
-          scp -r -i ../../../Fial.pem -o StrictHostKeyChecking=no -o UserKnownHostsFile=~/.ssh/known_hosts ./ ubuntu@13.232.215.86:~/app
+          scp -r -i ../keys/Fial.pem -o StrictHostKeyChecking=no -o UserKnownHostsFile=~/.ssh/known_hosts ./ ubuntu@13.232.215.86:~/app
 
       
