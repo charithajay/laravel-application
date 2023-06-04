@@ -16,8 +16,14 @@ jobs:
       - name: Install rsync
         run: sudo apt-get install rsync -y
 
+      - name: Prepare SSH
+        run: |
+          mkdir -p ~/.ssh
+          touch ~/.ssh/known_hosts
+
+      - name: Add host to known_hosts
+        run: ssh-keyscan -H 52.66.185.181 >> ~/.ssh/known_hosts
+
       - name: Deploy to EC2
         run: |
-          ssh-keyscan -H 52.66.185.181 >> ~/.ssh/known_hosts
           rsync -avz -e "ssh -i ${{ secrets.SSH_PRIVATE_KEY }}" --exclude='.git*' --exclude='vendor/' . ${{ secrets.SSH_USERNAME }}@52.66.185.181:/var/www/html/
-
