@@ -46,6 +46,6 @@ jobs:
           aws configure set default.region ap-south-1
 
           scp -r -i ../Fial.pem ./ ubuntu@43.205.128.246:~/app
-          ssh -i ../Fial.pem ubuntu@43.205.128.246 'cd ~/app && composer install --no-dev --optimize-autoloader && php artisan migrate --seed'
+          ssh -o StrictHostKeyChecking=no -i ../Fial.pem ubuntu@43.205.128.246 'cd ~/app && composer install --no-dev --optimize-autoloader && php artisan migrate --seed'
 
       
