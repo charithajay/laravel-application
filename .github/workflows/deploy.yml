@@ -39,13 +39,19 @@ jobs:
           sudo apt-get install -y unzip
           sudo apt-get install -y awscli
 
+      - name: Add host key to known_hosts
+        run: |
+          mkdir -p ~/.ssh
+          ssh-keyscan -H 13.232.215.86 >> ~/.ssh/known_hosts
+
       - name: Deploy to EC2
         run: |
           aws configure set aws_access_key_id AKIA5I76TBNTLPI5F4EU
           aws configure set aws_secret_access_key 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
           aws configure set default.region ap-south-1
 
-          scp -r -i ../Fial.pem ./ ubuntu@13.232.215.86:~/app
-          ssh -o StrictHostKeyChecking=no -i ../Fial.pem ubuntu@13.232.215.86 'cd ~/app && composer install --no-dev --optimize-autoloader && php artisan migrate --seed'
+          ssh -o StrictHostKeyChecking=no -o UserKnownHostsFile=~/.ssh/known_hosts -i ../Fial.pem ubuntu@13.232.215.86 'cd ~/app && composer install --no-dev --optimize-autoloader && php artisan migrate --seed'
+
+          scp -r -i ../Fial.pem -o StrictHostKeyChecking=no -o UserKnownHostsFile=~/.ssh/known_hosts ./ ubuntu@13.232.215.86:~/app
 
       
