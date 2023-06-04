@@ -41,8 +41,8 @@ jobs:
 
       - name: Deploy to EC2
         run: |
-          aws configure set aws_access_key_id AKIA5I76TBNTHW4Z5TV5
-          aws configure set aws_secret_access_key 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
+          aws configure set aws_access_key_id AKIA5I76TBNTLPI5F4EU
+          aws configure set aws_secret_access_key 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
           aws configure set default.region ap-south-1
 
           scp -r -i ../Fial.pem ./ ubuntu@43.205.128.246:~/app
