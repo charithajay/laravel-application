@@ -1,4 +1,4 @@
-name: Deploy Laravel Application
+name: Deploy to Ubuntu Server
 
 on:
   push:
@@ -10,35 +10,30 @@ jobs:
     runs-on: ubuntu-latest
 
     steps:
-      - name: Checkout code
+      - name: Checkout repository
         uses: actions/checkout@v2
 
-      - name: Set up SSH
-        uses: webfactory/ssh-agent@v0.5.2
+      - name: Install composer dependencies
+        run: composer install --prefer-dist --no-interaction
+
+      - name: Build assets
+        run: npm install --package-lock-only && npm ci && npm run build
+
+      - name: Deploy to server
+        uses: appleboy/scp-action@master
         with:
-          ssh-private-key: ${{ secrets.SSH_PRIVATE_KEY }}
+          host: ${{ secrets.HOST }}
+          username: ${{ secrets.USER }}
+          key: ${{ secrets.SSH_PRIVATE_KEY  }}
+          source: ./
+          target: /var/www/html/laravel-application
 
-      - name: Install rsync
-        run: sudo apt-get update && sudo apt-get install -y rsync
-
-  
-      - name: Install dependencies
-        run: composer install --no-progress --no-suggest --no-interaction
-
-      - name: Compile assets
-        run: |
-          npm install --package-lock-only
-          npm ci
-          npm run build
-
-      - name: Deploy to Ubuntu server
-        run: |
-          rsync -avz --delete-after --exclude=".env" --exclude="vendor/" --exclude="node_modules/" ./ ubuntu@52.66.185.181:/var/www/html
-
-      - name: Disable host key verification
-        run: |
-          ssh -o StrictHostKeyChecking=no ubuntu@52.66.185.181 "echo Host key verification disabled"
-
-      - name: Run Laravel migrations
-        run: |
-          ssh ubuntu@52.66.185.181 "cd /var/www/html && php artisan migrate --force"
+      - name: SSH into server
+        uses: appleboy/ssh-action@master
+        with:
+          host: ${{ secrets.HOST }}
+          username: ${{ secrets.USER }}
+          key: ${{ secrets.SSH_PRIVATE_KEY  }}
+          script: |
+            cd /var/www/html
+            ls
