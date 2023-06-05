@@ -39,6 +39,7 @@ jobs:
       - name: Sync application to server
         run: |
           rsync -avz --delete-after --exclude=".env" --exclude="vendor/" --exclude="node_modules/" ./ ubuntu@52.66.185.181:/var/www/html
+          ssh -o StrictHostKeyChecking=no ubuntu@52.66.185.181
 
 #       - name: Deploy to remote server
 #         run: |
