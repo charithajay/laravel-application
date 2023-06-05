@@ -6,7 +6,7 @@ on:
       - master
 
 env:
-  REMOTE_HOST: 13.232.215.86
+  REMOTE_HOST: 52.66.185.181
   REMOTE_USER: ubuntu
   REMOTE_PORT: 22
   REMOTE_DIRECTORY: /var/www/html
