@@ -27,6 +27,7 @@ jobs:
           key: ${{ secrets.SSH_PRIVATE_KEY  }}
           source: ./
           target: /var/www/html/laravel-application
+          args: --exclude=storage/logs
 
       - name: SSH into server
         uses: appleboy/ssh-action@master
