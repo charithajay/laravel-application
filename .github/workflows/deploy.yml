@@ -40,7 +40,7 @@ jobs:
 #           KEY: ${{secrets.SSH_PRIVATE_KEY}}
 #           TARGET: /var/www/html
       - name: Clear known hosts
-        run: ssh-keygen -R your-server-ip
+        run: ssh-keygen -R 52.66.185.181
 
       - name: Deploy to remote server
         run: |
