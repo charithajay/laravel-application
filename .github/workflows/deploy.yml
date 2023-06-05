@@ -31,7 +31,7 @@ jobs:
         run: |
           npm install --package-lock-only
           npm ci
-          npm run production
+          npm run build
 
       - name: Deploy to remote server
         run: |
