@@ -1,57 +1,45 @@
-name: Deploy to EC2
+name: Deploy to Remote Server
 
 on:
   push:
     branches:
       - master
 
+env:
+  REMOTE_HOST: 13.232.215.86
+  REMOTE_USER: ubuntu
+  REMOTE_PORT: 22
+  REMOTE_DIRECTORY: /var/www/html
+
 jobs:
   deploy:
     runs-on: ubuntu-latest
-    defaults:
-      run:
-        shell: bash
-        working-directory: app
-
+    
     steps:
-      - name: Set up Node.js
-        uses: actions/setup-node@v3
-        with:
-          node-version: '16'
-
       - name: Checkout code
-        uses: actions/checkout@v3
+        uses: actions/checkout@v2
+
+      - name: Set up SSH keys
+        uses: webfactory/ssh-agent@v0.5.0
+        with:
+          ssh-private-key: ${{ secrets.SSH_PRIVATE_KEY }}
 
       - name: Install dependencies
-        working-directory: ../laravel-application
-        run: composer install --no-dev --optimize-autoloader
+        run: composer install --no-interaction --prefer-dist --optimize-autoloader --no-dev
 
-      - name: Copy .env file
-        working-directory: ../laravel-application
-        run: cp .env.example .env
-     
-      - name: Generate application key
-        working-directory: ../laravel-application
-        run: php artisan key:generate
+      - name: Generate assets
+        run: npm ci && npm run production
 
-      - name: Install AWS CLI
+      - name: Deploy to remote server
         run: |
-          sudo apt-get install -y unzip
-          sudo apt-get install -y awscli
+          rsync -azP --delete -e "ssh -p ${{ env.REMOTE_PORT }}" \
+            --exclude='.git*' --exclude='vendor/' --exclude='node_modules/' \
+            ./ ${{ env.REMOTE_USER }}@${{ env.REMOTE_HOST }}:${{ env.REMOTE_DIRECTORY }}
 
-      - name: Add host key to known_hosts
-        run: |
-          mkdir -p ~/.ssh
-          ssh-keyscan -H 13.232.215.86 >> ~/.ssh/known_hosts
-
-      - name: Deploy to EC2
-        run: |
-          aws configure set aws_access_key_id AKIA5I76TBNTLPI5F4EU
-          aws configure set aws_secret_access_key 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
-          aws configure set default.region ap-south-1
-
-          ssh -o StrictHostKeyChecking=no -o UserKnownHostsFile=~/.ssh/known_hosts -i ../Fial.pem/ ubuntu@13.232.215.86 'cd ~/app && composer install --no-dev --optimize-autoloader && php artisan migrate --seed'
-
-          scp -r -i ../Fial.pem -o StrictHostKeyChecking=no -o UserKnownHostsFile=~/.ssh/known_hosts ./ ubuntu@13.232.215.86:~/app
-
-      
+          ssh -p ${{ env.REMOTE_PORT }} ${{ env.REMOTE_USER }}@${{ env.REMOTE_HOST }} \
+            "cd ${{ env.REMOTE_DIRECTORY }} && \
+            composer install --no-interaction --prefer-dist --optimize-autoloader --no-dev && \
+            php artisan migrate --force && \
+            php artisan config:cache && \
+            php artisan route:cache && \
+            php artisan optimize"
