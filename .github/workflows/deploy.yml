@@ -38,7 +38,7 @@ jobs:
 
       - name: Sync application to server
         run: |
-          rsync -avz --delete-after --exclude=".env" --exclude="vendor/" --exclude="node_modules/" ./ ${{ env.REMOTE_USER }@${{ env.REMOTE_HOST }:${{ env.REMOTE_DIRECTORY }}
+          rsync -avz --delete-after --exclude=".env" --exclude="vendor/" --exclude="node_modules/" ./ ubuntu@52.66.185.181:/var/www/html
 
 #       - name: Deploy to remote server
 #         run: |
