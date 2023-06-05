@@ -27,7 +27,7 @@ jobs:
           key: ${{ secrets.SSH_PRIVATE_KEY  }}
           source: ./
           target: /var/www/html/laravel-application
-          overwrite: yes
+          args: --overwrite
 
       - name: SSH into server
         uses: appleboy/ssh-action@master
