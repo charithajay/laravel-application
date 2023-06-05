@@ -29,7 +29,8 @@ jobs:
 
       - name: Generate assets
         run: |
-          npm ci --debug
+          npm install --package-lock-only
+          npm ci
 
       - name: Deploy to remote server
         run: |
