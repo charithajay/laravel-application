@@ -28,7 +28,8 @@ jobs:
         run: composer install --no-interaction --prefer-dist --optimize-autoloader --no-dev
 
       - name: Generate assets
-        run: npm install && npm run dev
+        run: |
+          npm ci --debug
 
       - name: Deploy to remote server
         run: |
@@ -43,3 +44,4 @@ jobs:
             php artisan config:cache && \
             php artisan route:cache && \
             php artisan optimize"
+  
