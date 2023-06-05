@@ -28,7 +28,7 @@ jobs:
         run: composer install --no-interaction --prefer-dist --optimize-autoloader --no-dev
 
       - name: Generate assets
-        run: npm install && npm run production
+        run: npm install && npm run dev
 
       - name: Deploy to remote server
         run: |
