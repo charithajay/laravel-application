@@ -20,3 +20,6 @@ jobs:
             Commit: ${{ github.sha }}
             Branch: ${{ github.ref }}
             Committer: ${{ github.actor }}
+          SLACK_CHANNEL: ${{ secrets.SLACK_PR_CHANNEL_ID }}
+          run: |
+          curl -X POST -H 'Content-type: application/json' --data '{"text":"Hello, World!"}' https://hooks.slack.com/services/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
