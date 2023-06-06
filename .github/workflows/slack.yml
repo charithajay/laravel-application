@@ -11,7 +11,7 @@ jobs:
 
     steps:
       - name: Send Slack Message
-        uses: rtCamp/action-slack-notify@v3
+        uses: actions/checkout@v2
         env:
           SLACK_WEBHOOK: ${{ secrets.SLACK_WEBHOOK }}
           SLACK_MESSAGE: |
