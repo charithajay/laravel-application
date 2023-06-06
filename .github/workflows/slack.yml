@@ -1,4 +1,4 @@
-name: Send Slack Message
+name: Notify Slack
 
 on:
   push:
@@ -6,15 +6,17 @@ on:
       - master
 
 jobs:
-  sendSlackMessage:
+  notify:
     runs-on: ubuntu-latest
 
     steps:
-      - name: Checkout repository
-        uses: actions/checkout@v2
-
       - name: Send Slack Message
+        uses: rtCamp/action-slack-notify@v3
         env:
-          SLACK_WEBHOOK_URL: ${{ secrets.SLACK_WEBHOOK_URL }}
-        run: |
-          curl -X POST -H 'Content-type: application/json' --data '{"text":"Hello, World!"}' https://hooks.slack.com/services/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
+          SLACK_WEBHOOK: ${{ secrets.SLACK_WEBHOOK }}
+          SLACK_MESSAGE: |
+            Deployment successful!
+            Repository: ${{ github.repository }}
+            Commit: ${{ github.sha }}
+            Branch: ${{ github.ref }}
+            Committer: ${{ github.actor }}
